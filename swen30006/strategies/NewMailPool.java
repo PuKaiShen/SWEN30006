@@ -13,6 +13,7 @@ public class NewMailPool extends MailPool {
         Robot[] robots = {i.next(), null, null};
         assert (robots[0].isEmpty());
         ListIterator<Item> j = pool.listIterator();
+        // adding item to hand
         if (pool.size() > 0) {
             Item new_item = j.next();
             if (new_item.mailItem.getWeight()<=Robot.INDIVIDUAL_MAX_WEIGHT){
@@ -33,16 +34,20 @@ public class NewMailPool extends MailPool {
             }else {
                 throw new ItemTooHeavyException();
             }
-            // tube item
+            // adding on tube
             int k = 0;
             while (pool.size()>0 && k<3){
-                while ((new_item = j.next())!= null){
-                    if (new_item.mailItem.getWeight()<=Robot.INDIVIDUAL_MAX_WEIGHT){
-                        robots[k].addToTube(new_item.mailItem);
-                        j.remove();
-                        k++;
-                        break;
+                if (robots[k]!=null){
+                    while ((new_item = j.next())!= null){
+                        if (new_item.mailItem.getWeight()<=Robot.INDIVIDUAL_MAX_WEIGHT){
+                            robots[k].addToTube(new_item.mailItem);
+                            j.remove();
+                            k++;
+                            break;
+                        }
                     }
+                }  else {
+                    break;
                 }
             }
 
