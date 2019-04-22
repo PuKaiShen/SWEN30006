@@ -11,7 +11,7 @@ import exceptions.ItemTooHeavyException;
 
 public class MailPool implements IMailPool {
 
-    private class Item {
+    protected class Item {
         int priority;
         int destination;
         MailItem mailItem;
@@ -41,8 +41,8 @@ public class MailPool implements IMailPool {
         }
     }
 
-    private LinkedList<Item> pool;
-    private LinkedList<Robot> robots;
+    protected LinkedList<Item> pool;
+    protected LinkedList<Robot> robots;
 
     public MailPool() {
         // Start empty
@@ -67,7 +67,7 @@ public class MailPool implements IMailPool {
         }
     }
 
-    private void loadRobot(ListIterator<Robot> i) throws ItemTooHeavyException {
+    protected void loadRobot(ListIterator<Robot> i) throws ItemTooHeavyException {
         Robot robot = i.next();
         assert (robot.isEmpty());
         // System.out.printf("P: %3d%n", pool.size());
@@ -84,14 +84,11 @@ public class MailPool implements IMailPool {
                 i.remove();       // remove from mailPool queue
             } catch (ItemTooHeavyException e) {
 
-
             } catch (Exception e) {
                 throw e;
             }
         }
     }
-
-
 
     @Override
     public void registerWaiting(Robot robot) { // assumes won't be there already

@@ -1,6 +1,7 @@
 package strategies;
 
 import automail.MailItem;
+import automail.PriorityMailItem;
 import automail.Robot;
 import exceptions.ItemTooHeavyException;
 
