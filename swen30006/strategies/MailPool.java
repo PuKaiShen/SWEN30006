@@ -44,7 +44,7 @@ public class MailPool implements IMailPool {
     private LinkedList<Item> pool;
     private LinkedList<Robot> robots;
 
-    public MailPool(int nrobots) {
+    public MailPool() {
         // Start empty
         pool = new LinkedList<Item>();
         robots = new LinkedList<Robot>();
@@ -90,6 +90,8 @@ public class MailPool implements IMailPool {
             }
         }
     }
+
+
 
     @Override
     public void registerWaiting(Robot robot) { // assumes won't be there already

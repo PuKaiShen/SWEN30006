@@ -73,7 +73,7 @@ public class Simulation {
         System.out.println(robots);
         assert (robots > 0);
         // MailPool
-        IMailPool mailPool = new MailPool(robots);
+        IMailPool mailPool = new MailPool();
 
         // End properties
 
