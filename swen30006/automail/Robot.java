@@ -36,7 +36,7 @@ public class Robot {
     private int deliveryCounter;
 
     private boolean inTeam;
-
+    private int movingSteps;
 
     /**
      * Initiates the robot's location at the start to be at the mailroom
@@ -64,6 +64,7 @@ public class Robot {
     public void teamDispatch(){
         dispatch();
         inTeam=true;
+        movingSteps=0;
     }
     /**
      * This is called on every time step
@@ -140,7 +141,15 @@ public class Robot {
      */
     private void moveTowards(int destination) {
         if (current_floor < destination) {
-            current_floor++;
+            if (inTeam){
+                movingSteps+=1;
+                if (movingSteps==3){
+                    movingSteps=0;
+                    current_floor++;
+                }
+            }else {
+                current_floor++;
+            }
         } else {
             current_floor--;
         }
