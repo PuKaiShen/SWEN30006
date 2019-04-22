@@ -6,6 +6,7 @@ import exceptions.MailAlreadyDeliveredException;
 import strategies.Automail;
 import strategies.IMailPool;
 import strategies.MailPool;
+import strategies.NewMailPool;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -73,7 +74,7 @@ public class Simulation {
         System.out.println(robots);
         assert (robots > 0);
         // MailPool
-        IMailPool mailPool = new MailPool();
+        IMailPool mailPool = new NewMailPool();
 
         // End properties
 

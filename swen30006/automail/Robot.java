@@ -35,6 +35,8 @@ public class Robot {
 
     private int deliveryCounter;
 
+    private boolean inTeam;
+
 
     /**
      * Initiates the robot's location at the start to be at the mailroom
@@ -59,6 +61,10 @@ public class Robot {
         receivedDispatch = true;
     }
 
+    public void teamDispatch(){
+        dispatch();
+        inTeam=true;
+    }
     /**
      * This is called on every time step
      *
@@ -188,17 +194,17 @@ public class Robot {
         deliveryItem = mailItem;
     }
 
-//    public void pairAddToHand(MailItem mailItem) throws ItemTooHeavyException {
-//        assert (deliveryItem == null);
-//        deliveryItem = mailItem;
-//        if (deliveryItem.weight > PAIR_MAX_WEIGHT) throw new ItemTooHeavyException();
-//    }
-//
-//    public void tripleAddToHand(MailItem mailItem) throws ItemTooHeavyException {
-//        assert (deliveryItem == null);
-//        deliveryItem = mailItem;
-//        if (deliveryItem.weight > TRIPLE_MAX_WEIGHT) throw new ItemTooHeavyException();
-//    }
+    public void pairAddToHand(MailItem mailItem) throws ItemTooHeavyException {
+        assert (deliveryItem == null);
+        deliveryItem = mailItem;
+        if (deliveryItem.weight > PAIR_MAX_WEIGHT) throw new ItemTooHeavyException();
+    }
+
+    public void tripleAddToHand(MailItem mailItem) throws ItemTooHeavyException {
+        assert (deliveryItem == null);
+        deliveryItem = mailItem;
+        if (deliveryItem.weight > TRIPLE_MAX_WEIGHT) throw new ItemTooHeavyException();
+    }
 
     public void addToTube(MailItem mailItem) throws ItemTooHeavyException {
         assert (tube == null);
