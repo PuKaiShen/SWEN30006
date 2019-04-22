@@ -61,7 +61,7 @@ public class MailPool implements IMailPool {
     public void step() throws ItemTooHeavyException {
         try {
             ListIterator<Robot> i = robots.listIterator();
-            while (i.hasNext()) loadRobot(i);
+            while (i.hasNext())loadRobot(i);
         } catch (Exception e) {
             throw e;
         }

@@ -74,7 +74,16 @@ public class Simulation {
         System.out.println(robots);
         assert (robots > 0);
         // MailPool
-        IMailPool mailPool = new NewMailPool();
+        IMailPool mailPool = null;
+        IMailDelivery mailDelivery = null;
+        if (MAIL_MAX_WEIGHT<=Robot.INDIVIDUAL_MAX_WEIGHT){
+            mailPool = new MailPool();
+            mailDelivery = new ReportDelivery();
+        }else {
+            mailPool = new NewMailPool();
+//            mailDelivery = new ReportDelivery();
+            mailDelivery = new NewReportDelivery();
+        }
 
         // End properties
 
@@ -95,7 +104,7 @@ public class Simulation {
         }
         Integer seed = seedMap.get(true);
         System.out.printf("Seed: %s%n", seed == null ? "null" : seed.toString());
-        Automail automail = new Automail(mailPool, new ReportDelivery(), robots);
+        Automail automail = new Automail(mailPool, mailDelivery, robots);
         MailGenerator mailGenerator = new MailGenerator(MAIL_TO_CREATE, MAIL_MAX_WEIGHT, automail.mailPool, seedMap);
 
         /** Initiate all the mail */
@@ -138,6 +147,29 @@ public class Simulation {
         }
     }
 
+    static class NewReportDelivery extends ReportDelivery {
+
+        @Override
+        public void deliver(MailItem mailItem) {
+            if (mailItem.getWeight()<=Robot.INDIVIDUAL_MAX_WEIGHT){
+                super.deliver(mailItem);
+            }else if (mailItem.getWeight()<=Robot.TRIPLE_MAX_WEIGHT){
+                if(mailItem.delivered()){
+                    MAIL_DELIVERED.add(mailItem);
+                    System.out.printf("T: %3d > Delivered(%4d) [%s]%n", Clock.Time(), MAIL_DELIVERED.size(), mailItem.toString());
+                    total_score += calculateDeliveryScore(mailItem);
+                }
+            }else {
+                try {
+                    throw new MailAlreadyDeliveredException();
+                } catch (MailAlreadyDeliveredException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+    }
+
     private static double calculateDeliveryScore(MailItem deliveryItem) {
         // Penalty for longer delivery times
         final double penalty = 1.2;
@@ -154,4 +186,6 @@ public class Simulation {
         System.out.println("Final Delivery time: " + Clock.Time());
         System.out.printf("Final Score: %.2f%n", total_score);
     }
+
+
 }

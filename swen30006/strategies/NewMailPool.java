@@ -50,15 +50,19 @@ public class NewMailPool extends MailPool {
             // adding on tube
             int k = 0;
             while (pool.size()>0 && k<robot_used){
+//                System.out.println("before size : " + pool.size());
                 if (robots[k]!=null){
-                    while ((new_item = j.next())!= null){
-                        System.out.println("here2");
+                    while (j.hasNext() && (new_item = j.next())!= null){
+                        System.out.println("Item size : " + new_item.mailItem.getWeight());
                         if (new_item.mailItem.getWeight()<=Robot.INDIVIDUAL_MAX_WEIGHT){
                             robots[k].addToTube(new_item.mailItem);
                             j.remove();
                             k++;
                             break;
                         }
+                    }
+                    if (!j.hasNext()){
+                        break;
                     }
                 }  else {
                     break;
