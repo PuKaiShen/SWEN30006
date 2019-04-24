@@ -118,6 +118,9 @@ public class Robot {
                         setRoute();
                         changeState(RobotState.DELIVERING);
                     }
+                    if (inTeam){
+                        inTeam=false;
+                    }
                 } else {
                     /** The robot is not at the destination yet, move towards it! */
                     moveTowards(destination_floor);
