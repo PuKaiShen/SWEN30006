@@ -50,7 +50,7 @@ public class MailPool implements IMailPool {
         robots = new LinkedList<Robot>();
     }
 
-    @Override
+//    @Override
     public void addToPool(MailItem mailItem) {
         Item item = new Item(mailItem);
         pool.add(item);
@@ -90,7 +90,7 @@ public class MailPool implements IMailPool {
         }
     }
 
-    @Override
+//    @Override
     public void registerWaiting(Robot robot) { // assumes won't be there already
         robots.add(robot);
     }

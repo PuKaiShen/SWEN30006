@@ -3,10 +3,7 @@ package automail;
 import exceptions.ExcessiveDeliveryException;
 import exceptions.ItemTooHeavyException;
 import exceptions.MailAlreadyDeliveredException;
-import strategies.Automail;
-import strategies.IMailPool;
-import strategies.MailPool;
-import strategies.NewMailPool;
+import strategies.*;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -77,8 +74,8 @@ public class Simulation {
         IMailPool mailPool = null;
         IMailDelivery mailDelivery = null;
 
-        mailPool = new NewMailPool();
-        mailDelivery = new NewReportDelivery();
+        mailPool = new WeightDistributeMailPool();
+        mailDelivery = new ReportDelivery();
 //        mailPool = new MailPool();
 //        mailDelivery = new ReportDelivery();
 

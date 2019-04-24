@@ -16,6 +16,14 @@ public class Robot {
     static public final int PAIR_MAX_WEIGHT = 2600;
     static public final int TRIPLE_MAX_WEIGHT = 3000;
 
+    public class Info{
+        int current_floor;
+
+        public Info(int current_floor) {
+            this.current_floor = current_floor;
+        }
+    }
+
     IMailDelivery delivery;
     protected final String id;
 
@@ -23,9 +31,12 @@ public class Robot {
      * Possible states the robot can be in
      */
     public enum RobotState {DELIVERING, WAITING, RETURNING}
+    public enum RobotBehaviour {TEAM, SOLO}
 
     public RobotState current_state;
-    private int current_floor;
+
+    private Info info;
+//    private int current_floor;
     private int destination_floor;
     private IMailPool mailPool;
     private boolean receivedDispatch;
@@ -33,16 +44,35 @@ public class Robot {
     private MailItem deliveryItem = null;
     private MailItem tube = null;
 
+    public IBehaviour getBehaviour() {
+        return behaviour;
+    }
+
+    private void changeBehaviour(RobotBehaviour robotBehaviour){
+        switch (robotBehaviour){
+            case SOLO:
+                behaviour = new SoloBehaviour(info);
+                break;
+            case TEAM:
+                behaviour = new TeamBehaviour(info);
+                break;
+        }
+    }
+
+    /** added new attribute **/
+
+    /*version 2.0*/
+    private IBehaviour behaviour;
+    /*end of version 2.0*/
+
+    /*version 1.1*/
     private int deliveryCounter;
 
-    private boolean inTeam;
-    private int movingSteps;
-
+    /* end of version 1.1*/
     /**
      * Initiates the robot's location at the start to be at the mailroom
      * also set it to be waiting for mail.
      *
-     * @param behaviour governs selection of mail items for delivery and behaviour on priority arrivals
      * @param delivery  governs the final delivery
      * @param mailPool  is the source of mail items
      */
@@ -50,7 +80,11 @@ public class Robot {
         id = "R" + hashCode();
         // current_state = RobotState.WAITING;
         current_state = RobotState.RETURNING;
-        current_floor = Building.MAILROOM_LOCATION;
+
+        info = new Info(Building.MAILROOM_LOCATION);
+        /*default mode is solo*/
+        behaviour = new SoloBehaviour(info);
+
         this.delivery = delivery;
         this.mailPool = mailPool;
         this.receivedDispatch = false;
@@ -63,8 +97,7 @@ public class Robot {
 
     public void teamDispatch(){
         dispatch();
-        inTeam=true;
-        movingSteps=0;
+        changeBehaviour(RobotBehaviour.TEAM);
     }
     /**
      * This is called on every time step
@@ -76,7 +109,7 @@ public class Robot {
             /** This state is triggered when the robot is returning to the mailroom after a delivery */
             case RETURNING:
                 /** If its current position is at the mailroom, then the robot should change state */
-                if (current_floor == Building.MAILROOM_LOCATION) {
+                if (info.current_floor == Building.MAILROOM_LOCATION) {
                     if (tube != null) {
                         mailPool.addToPool(tube);
                         System.out.printf("T: %3d > old addToPool [%s]%n", Clock.Time(), tube.toString());
@@ -87,7 +120,7 @@ public class Robot {
                     changeState(RobotState.WAITING);
                 } else {
                     /** If the robot is not at the mailroom floor yet, then move towards it! */
-                    moveTowards(Building.MAILROOM_LOCATION);
+                    behaviour.moveTowards(Building.MAILROOM_LOCATION);
                     break;
                 }
             case WAITING:
@@ -100,7 +133,7 @@ public class Robot {
                 }
                 break;
             case DELIVERING:
-                if (current_floor == destination_floor) { // If already here drop off either way
+                if (info.current_floor == destination_floor) { // If already here drop off either way
                     /** Delivery complete, report this to the simulator! */
                     delivery.deliver(deliveryItem);
                     deliveryItem = null;
@@ -118,12 +151,10 @@ public class Robot {
                         setRoute();
                         changeState(RobotState.DELIVERING);
                     }
-                    if (inTeam){
-                        inTeam=false;
-                    }
+                    changeBehaviour(RobotBehaviour.SOLO);
                 } else {
                     /** The robot is not at the destination yet, move towards it! */
-                    moveTowards(destination_floor);
+                    behaviour.moveTowards(destination_floor);
                 }
                 break;
         }
@@ -140,23 +171,22 @@ public class Robot {
     /**
      * Generic function that moves the robot towards the destination
      *
-     * @param destination the floor towards which the robot is moving
      */
-    private void moveTowards(int destination) {
-        if (current_floor < destination) {
-            if (inTeam){
-                movingSteps+=1;
-                if (movingSteps==3){
-                    movingSteps=0;
-                    current_floor++;
-                }
-            }else {
-                current_floor++;
-            }
-        } else {
-            current_floor--;
-        }
-    }
+//    private void moveTowards(int destination) {
+//        if (info.current_floor < destination) {
+//            if (inTeam){
+//                movingSteps+=1;
+//                if (movingSteps==3){
+//                    movingSteps=0;
+//                    info.current_floor++;
+//                }
+//            }else {
+//                info.current_floor++;
+//            }
+//        } else {
+//            info.current_floor--;
+//        }
+//    }
 
     private String getIdTube() {
         return String.format("%s(%1d)", id, (tube == null ? 0 : 1));
@@ -206,17 +236,23 @@ public class Robot {
         deliveryItem = mailItem;
     }
 
-    public void pairAddToHand(MailItem mailItem) throws ItemTooHeavyException {
+    /*move the guard to the distributor, instead of robot*/
+    public void addToHand(MailItem mailItem, boolean passWeightCheck) {
         assert (deliveryItem == null);
         deliveryItem = mailItem;
-        if (deliveryItem.weight > PAIR_MAX_WEIGHT) throw new ItemTooHeavyException();
     }
 
-    public void tripleAddToHand(MailItem mailItem) throws ItemTooHeavyException {
-        assert (deliveryItem == null);
-        deliveryItem = mailItem;
-        if (deliveryItem.weight > TRIPLE_MAX_WEIGHT) throw new ItemTooHeavyException();
-    }
+//    public void pairAddToHand(MailItem mailItem) throws ItemTooHeavyException {
+//        assert (deliveryItem == null);
+//        deliveryItem = mailItem;
+//        if (deliveryItem.weight > PAIR_MAX_WEIGHT) throw new ItemTooHeavyException();
+//    }
+//
+//    public void tripleAddToHand(MailItem mailItem) throws ItemTooHeavyException {
+//        assert (deliveryItem == null);
+//        deliveryItem = mailItem;
+//        if (deliveryItem.weight > TRIPLE_MAX_WEIGHT) throw new ItemTooHeavyException();
+//    }
 
     public void addToTube(MailItem mailItem) throws ItemTooHeavyException {
         assert (tube == null);

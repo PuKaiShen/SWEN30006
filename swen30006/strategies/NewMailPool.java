@@ -26,8 +26,8 @@ public class NewMailPool extends MailPool {
                 if (i.hasNext()) robots[1] = i.next();else return;
                 assert (robots[1].isEmpty());
                 // add to two robots' hand
-                robots[0].pairAddToHand(new_item.mailItem);
-                robots[1].pairAddToHand(new_item.mailItem);
+//                robots[0].pairAddToHand(new_item.mailItem);
+//                robots[1].pairAddToHand(new_item.mailItem);
                 robot_used=2;
                 j.remove();
             }else if (new_item.mailItem.getWeight()<=Robot.TRIPLE_MAX_WEIGHT) {
@@ -38,9 +38,9 @@ public class NewMailPool extends MailPool {
                 if (i.hasNext())robots[2] = i.next();else return;
                 assert (robots[2].isEmpty());
                 // add to three robots' hand
-                robots[0].tripleAddToHand(new_item.mailItem);
-                robots[1].tripleAddToHand(new_item.mailItem);
-                robots[2].tripleAddToHand(new_item.mailItem);
+//                robots[0].tripleAddToHand(new_item.mailItem);
+//                robots[1].tripleAddToHand(new_item.mailItem);
+//                robots[2].tripleAddToHand(new_item.mailItem);
 
                 robot_used=3;
                 j.remove();
