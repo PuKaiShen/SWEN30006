@@ -76,14 +76,11 @@ public class Simulation {
         // MailPool
         IMailPool mailPool = null;
         IMailDelivery mailDelivery = null;
-        if (MAIL_MAX_WEIGHT<=Robot.INDIVIDUAL_MAX_WEIGHT){
-            mailPool = new MailPool();
-            mailDelivery = new ReportDelivery();
-        }else {
-            mailPool = new NewMailPool();
-//            mailDelivery = new ReportDelivery();
-            mailDelivery = new NewReportDelivery();
-        }
+
+        mailPool = new NewMailPool();
+        mailDelivery = new NewReportDelivery();
+//        mailPool = new MailPool();
+//        mailDelivery = new ReportDelivery();
 
         // End properties
 
