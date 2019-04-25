@@ -26,6 +26,11 @@ public class SimpleDistributeSystem implements IdistributeSystem{
         }
     }
 
+    @Override
+    public void dispatch(Robot robot) {
+        robot.setReceivedDispatch(true);
+    }
+
     private void loadRobot(ListIterator<Robot> i) throws ItemTooHeavyException {
         Robot robot = i.next();
         assert (robot.isEmpty());
@@ -39,7 +44,7 @@ public class SimpleDistributeSystem implements IdistributeSystem{
                     robot.addToTube(j.next().mailItem);
                     j.remove();
                 }
-                robot.dispatch(); // send the robot off if it has any items to deliver
+                dispatch(robot); // send the robot off if it has any items to deliver
                 i.remove();       // remove from mailPool queue
             } catch (ItemTooHeavyException e) {
 

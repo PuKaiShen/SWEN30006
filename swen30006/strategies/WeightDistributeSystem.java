@@ -59,6 +59,11 @@ public class WeightDistributeSystem implements IdistributeSystem {
         }
     }
 
+    @Override
+    public void dispatch(Robot robot) {
+        WeightDistributeHelper.Dispatch(robot);
+    }
+
     static Weight isHeavy(ListIterator<WeightDistributeMailPool.Item> j){
         MailItem mailItem = j.next().mailItem;
         j.previous();// go back, so the next pointer can point to the true item
@@ -92,7 +97,7 @@ class WeightDistributeHelper {
                 j.next();
             }
         }
-        robot.dispatch();
+        Dispatch(robot);
         i.remove();
     }
 
@@ -139,11 +144,18 @@ class WeightDistributeHelper {
         }
 
         for (Robot robot : robots) {
-            robot.teamDispatch();
+            Dispatch(robot);
             i.remove();
             if (i.hasPrevious()){
                 i.previous();
             }
+        }
+    }
+
+    public static void Dispatch(Robot robot){
+        robot.setReceivedDispatch(true);
+        if (robot.getDeliveryItem().getWeight()>Robot.INDIVIDUAL_MAX_WEIGHT){
+            robot.changeBehaviour(Robot.RobotBehaviour.TEAM);
         }
     }
 
@@ -159,5 +171,4 @@ class WeightDistributeHelper {
             robot.addToHand(mailItem, true);
         }
     }
-
 }

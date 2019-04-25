@@ -73,7 +73,7 @@ public class Simulation {
         assert (robots > 0);
         // MailPool
 
-        IMailPool mailPool = new MailPool();
+        IMailPool mailPool = new WeightDistributeMailPool();
         IMailDelivery mailDelivery = new TeamReportDelivery();
 
         // End properties
@@ -103,6 +103,7 @@ public class Simulation {
         // PriorityMailItem priority;  // Not used in this version
         while (MAIL_DELIVERED.size() != mailGenerator.MAIL_TO_CREATE) {
             // System.out.printf("Delivered: %4d; Created: %4d%n", MAIL_DELIVERED.size(), mailGenerator.MAIL_TO_CREATE);
+//            System.out.println("here1");
             mailGenerator.step();
             try {
                 automail.mailPool.step();

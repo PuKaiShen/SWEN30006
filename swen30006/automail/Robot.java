@@ -41,16 +41,21 @@ public class Robot {
 
     private int destination_floor;
     private IMailPool mailPool;
+
+    public void setReceivedDispatch(boolean receivedDispatch) {
+        this.receivedDispatch = receivedDispatch;
+    }
+
     private boolean receivedDispatch;
+
+    public MailItem getDeliveryItem() {
+        return deliveryItem;
+    }
 
     private MailItem deliveryItem = null;
     private MailItem tube = null;
 
-    public RobotBehaviour getBehaviour() {
-        return info.current_behaviour;
-    }
-
-    private void changeBehaviour(RobotBehaviour robotBehaviour){
+    public void changeBehaviour(RobotBehaviour robotBehaviour){
         switch (robotBehaviour){
             case SOLO:
                 behaviour = new SoloBehaviour(info);
@@ -92,14 +97,6 @@ public class Robot {
         this.deliveryCounter = 0;
     }
 
-    public void dispatch() {
-        receivedDispatch = true;
-    }
-
-    public void teamDispatch(){
-        dispatch();
-        changeBehaviour(RobotBehaviour.TEAM);
-    }
     /**
      * This is called on every time step
      *
