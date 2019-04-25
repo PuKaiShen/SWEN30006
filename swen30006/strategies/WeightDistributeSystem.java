@@ -27,16 +27,13 @@ public class WeightDistributeSystem implements IdistributeSystem {
         ListIterator<Robot> i = robots.listIterator();
         ListIterator<WeightDistributeMailPool.Item> j = pool.listIterator();
         while (i.hasNext()){
-//            System.out.println("here2");
             i.next();
             WeightDistributeMailPool.Item item = null;
             if (j.hasNext()){
                 i.previous();
-//                System.out.println("here3");
                 Weight weight = isHeavy(j);
                 switch (weight){
                     case LIGHT:
-//                        System.out.println("here6");
                         try{
                             WeightDistributeHelper.LoadLight(i, j);
                         }catch (ItemTooHeavyException e){
@@ -44,7 +41,6 @@ public class WeightDistributeSystem implements IdistributeSystem {
                         }
                         break;
                     case HEAVY:
-//                        System.out.println("here7");
                         try {
                             WeightDistributeHelper.LoadHeavy(i, j, Weight.HEAVY);
                         } catch (ItemTooHeavyException e) {
@@ -52,7 +48,6 @@ public class WeightDistributeSystem implements IdistributeSystem {
                         }
                         break;
                     case SUPER_HEAVY:
-//                        System.out.println("here8");
                         try {
                             WeightDistributeHelper.LoadHeavy(i, j, Weight.SUPER_HEAVY);
                         } catch (ItemTooHeavyException e) {
@@ -64,7 +59,7 @@ public class WeightDistributeSystem implements IdistributeSystem {
         }
     }
 
-    protected static Weight isHeavy(ListIterator<WeightDistributeMailPool.Item> j){
+    static Weight isHeavy(ListIterator<WeightDistributeMailPool.Item> j){
         MailItem mailItem = j.next().mailItem;
         j.previous();// go back, so the next pointer can point to the true item
         if (mailItem.getWeight()<=Robot.INDIVIDUAL_MAX_WEIGHT){

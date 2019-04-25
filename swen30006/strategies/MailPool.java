@@ -43,11 +43,13 @@ public class MailPool implements IMailPool {
 
     protected LinkedList<Item> pool;
     protected LinkedList<Robot> robots;
+    protected IdistributeSystem distributeSystem;
 
     public MailPool() {
         // Start empty
         pool = new LinkedList<Item>();
         robots = new LinkedList<Robot>();
+        distributeSystem = new SimpleDistributeSystem(pool, robots);
     }
 
 //    @Override
@@ -59,35 +61,8 @@ public class MailPool implements IMailPool {
 
     @Override
     public void step() throws ItemTooHeavyException {
-        try {
-            ListIterator<Robot> i = robots.listIterator();
-            while (i.hasNext())loadRobot(i);
-        } catch (Exception e) {
-            throw e;
-        }
-    }
 
-    protected void loadRobot(ListIterator<Robot> i) throws ItemTooHeavyException {
-        Robot robot = i.next();
-        assert (robot.isEmpty());
-        // System.out.printf("P: %3d%n", pool.size());
-        ListIterator<Item> j = pool.listIterator();
-        if (pool.size() > 0) {
-            try {
-                robot.addToHand(j.next().mailItem); // hand first as we want higher priority delivered first
-                j.remove();
-                if (pool.size() > 0) {
-                    robot.addToTube(j.next().mailItem);
-                    j.remove();
-                }
-                robot.dispatch(); // send the robot off if it has any items to deliver
-                i.remove();       // remove from mailPool queue
-            } catch (ItemTooHeavyException e) {
-
-            } catch (Exception e) {
-                throw e;
-            }
-        }
+        distributeSystem.distribute();
     }
 
 //    @Override

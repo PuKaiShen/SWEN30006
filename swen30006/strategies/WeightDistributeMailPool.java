@@ -14,17 +14,21 @@ import exceptions.ItemTooHeavyException;
  * */
 public class WeightDistributeMailPool extends MailPool {
 
-    WeightDistributeSystem weightDistributeSystem;
+//    private IdistributeSystem distributeSystem;
 
 
+    public WeightDistributeMailPool(IdistributeSystem distributeSystem){
+        super();
+        this.distributeSystem = distributeSystem;
+    }
 
     public WeightDistributeMailPool() {
         super();
-        weightDistributeSystem = new WeightDistributeSystem(pool, robots);
+        distributeSystem = new WeightDistributeSystem(pool, robots);
     }
 
     @Override
     public void step() throws ItemTooHeavyException {
-        weightDistributeSystem.distribute();
+        distributeSystem.distribute();
     }
 }

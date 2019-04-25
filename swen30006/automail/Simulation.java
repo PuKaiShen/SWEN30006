@@ -73,7 +73,7 @@ public class Simulation {
         assert (robots > 0);
         // MailPool
 
-        IMailPool mailPool = new WeightDistributeMailPool();
+        IMailPool mailPool = new MailPool();
         IMailDelivery mailDelivery = new TeamReportDelivery();
 
         // End properties
@@ -139,13 +139,13 @@ public class Simulation {
     }
 
     static class TeamReportDelivery extends ReportDelivery {
-
+        // follow the basic idea of ReportDelivery and on top of that make a heavy item check
         private Map<MailItem, Integer> heavyMailItemsDelivered = new HashMap<>();
 
         @Override
         public void deliver(MailItem mailItem) {
             if (mailItem.getWeight()<=Robot.INDIVIDUAL_MAX_WEIGHT){
-                super.deliver(mailItem);// just do whatever that parent do.
+                super.deliver(mailItem);
             }else if (mailItem.getWeight()<=Robot.TRIPLE_MAX_WEIGHT){
                 if(teamDeliverFinish(mailItem)){
                     super.deliver(mailItem);
