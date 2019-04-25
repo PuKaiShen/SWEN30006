@@ -27,8 +27,6 @@ public class MailItem {
      */
     protected final int weight;
 
-    protected int deliverCount = 0;
-    protected int countNeeded;
 
     /**
      * Constructor for a MailItem
@@ -42,12 +40,6 @@ public class MailItem {
         this.id = String.valueOf(hashCode());
         this.arrival_time = arrival_time;
         this.weight = weight;
-
-        if (weight>Robot.INDIVIDUAL_MAX_WEIGHT && weight<=Robot.PAIR_MAX_WEIGHT){
-            this.countNeeded=2;
-        }else if (weight>Robot.PAIR_MAX_WEIGHT && weight<=Robot.TRIPLE_MAX_WEIGHT){
-            this.countNeeded=3;
-        }
     }
 
     @Override
@@ -81,11 +73,6 @@ public class MailItem {
      */
     public int getWeight() {
         return weight;
-    }
-
-    public boolean delivered(){
-        deliverCount++;
-        return deliverCount==countNeeded;
     }
 
     static private int count = 0;

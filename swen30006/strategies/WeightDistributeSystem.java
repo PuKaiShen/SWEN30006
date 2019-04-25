@@ -99,7 +99,6 @@ class WeightDistributeHelper {
         }
         robot.dispatch();
         i.remove();
-        System.out.println("here4");
     }
 
     public static void LoadHeavy(ListIterator<Robot> i,
@@ -116,15 +115,15 @@ class WeightDistributeHelper {
         }
 
         assert (robots!=null);
-        for (int k=0;k<robots.length;k++ ){
-            if (i.hasNext()) robots[k] = i.next();
+        for (int k=0;k<robots.length;k++ ){// if not enough robots to carry the item, just leave it and return
+            if (i.hasNext()) robots[k] = i.next(); else return;
             assert (robots[k].isEmpty());
         }
+
 
         WeightDistributeSystem.Weight weight = null;
 
         MailItem mailItem = j.next().mailItem;
-
         // team Robot
         for (Robot robot : robots) {
             addToRobotHand(robot, mailItem, ItemWeight);

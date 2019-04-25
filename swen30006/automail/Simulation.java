@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -71,13 +72,9 @@ public class Simulation {
         System.out.println(robots);
         assert (robots > 0);
         // MailPool
-        IMailPool mailPool = null;
-        IMailDelivery mailDelivery = null;
 
-        mailPool = new WeightDistributeMailPool();
-        mailDelivery = new ReportDelivery();
-//        mailPool = new MailPool();
-//        mailDelivery = new ReportDelivery();
+        IMailPool mailPool = new WeightDistributeMailPool();
+        IMailDelivery mailDelivery = new TeamReportDelivery();
 
         // End properties
 
@@ -141,26 +138,46 @@ public class Simulation {
         }
     }
 
-    static class NewReportDelivery extends ReportDelivery {
+    static class TeamReportDelivery extends ReportDelivery {
+
+        private Map<MailItem, Integer> heavyMailItemsDelivered = new HashMap<>();
 
         @Override
         public void deliver(MailItem mailItem) {
             if (mailItem.getWeight()<=Robot.INDIVIDUAL_MAX_WEIGHT){
-                super.deliver(mailItem);
+                super.deliver(mailItem);// just do whatever that parent do.
             }else if (mailItem.getWeight()<=Robot.TRIPLE_MAX_WEIGHT){
-                if(mailItem.delivered()){
-                    MAIL_DELIVERED.add(mailItem);
-                    System.out.printf("T: %3d > Delivered(%4d) [%s]%n", Clock.Time(), MAIL_DELIVERED.size(), mailItem.toString());
-                    total_score += calculateDeliveryScore(mailItem);
+                if(teamDeliverFinish(mailItem)){
+                    super.deliver(mailItem);
                 }
             }else {
                 try {
-                    throw new MailAlreadyDeliveredException();
-                } catch (MailAlreadyDeliveredException e) {
+                    throw new ItemTooHeavyException();
+                } catch (ItemTooHeavyException e) {
                     e.printStackTrace();
                 }
             }
+        }
 
+        private boolean teamDeliverFinish(MailItem mailItem){
+
+            if (heavyMailItemsDelivered.get(mailItem)==null){
+                heavyMailItemsDelivered.put(mailItem, 1);
+            }else if (heavyMailItemsDelivered.get(mailItem)==1){
+                if (mailItem.getWeight()<=Robot.PAIR_MAX_WEIGHT){
+                    heavyMailItemsDelivered.remove(mailItem);
+                    return true;
+                }else {
+                    heavyMailItemsDelivered.put(mailItem, 2);
+                }
+            }else if (heavyMailItemsDelivered.get(mailItem)==2){
+                if (mailItem.getWeight()<=Robot.TRIPLE_MAX_WEIGHT){
+                    heavyMailItemsDelivered.remove(mailItem);
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 

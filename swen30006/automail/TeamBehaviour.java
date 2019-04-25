@@ -7,6 +7,7 @@ public class TeamBehaviour implements IBehaviour {
 
     public TeamBehaviour(Robot.Info robotInfo) {
         this.robotInfo = robotInfo;
+        this.robotInfo.current_behaviour = Robot.RobotBehaviour.TEAM;
         stepCount=0;
     }
 

@@ -6,6 +6,7 @@ public class SoloBehaviour implements IBehaviour {
 
     public SoloBehaviour(Robot.Info robotInfo) {
         this.robotInfo = robotInfo;
+        this.robotInfo.current_behaviour = Robot.RobotBehaviour.SOLO;
     }
 
     @Override
