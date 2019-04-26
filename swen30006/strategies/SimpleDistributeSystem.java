@@ -8,19 +8,11 @@ import java.util.ListIterator;
 
 public class SimpleDistributeSystem implements IdistributeSystem{
 
-    private LinkedList<WeightDistributeMailPool.Item> pool;
-    private LinkedList<Robot> robots;
-
-    public SimpleDistributeSystem(LinkedList<WeightDistributeMailPool.Item> pool, LinkedList<Robot> robots) {
-        this.pool=pool;
-        this.robots=robots;
-    }
-
     @Override
-    public void distribute() {
+    public void distribute(LinkedList<Robot> robots, LinkedList<MailPool.Item> pool) {
         try {
             ListIterator<Robot> i = robots.listIterator();
-            while (i.hasNext())loadRobot(i);
+            while (i.hasNext())loadRobot(i, pool);
         } catch (ItemTooHeavyException e) {
             e.printStackTrace();
         }
@@ -31,7 +23,7 @@ public class SimpleDistributeSystem implements IdistributeSystem{
         robot.setReceivedDispatch(true);
     }
 
-    private void loadRobot(ListIterator<Robot> i) throws ItemTooHeavyException {
+    private void loadRobot(ListIterator<Robot> i, LinkedList<MailPool.Item> pool) throws ItemTooHeavyException {
         Robot robot = i.next();
         assert (robot.isEmpty());
         // System.out.printf("P: %3d%n", pool.size());

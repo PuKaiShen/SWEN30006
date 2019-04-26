@@ -1,5 +1,6 @@
 package automail;
 
+import Factories.DistributeSystemFactory;
 import exceptions.ExcessiveDeliveryException;
 import exceptions.ItemTooHeavyException;
 import exceptions.MailAlreadyDeliveredException;
@@ -73,7 +74,7 @@ public class Simulation {
         assert (robots > 0);
         // MailPool
 
-        IMailPool mailPool = new WeightDistributeMailPool();
+        IMailPool mailPool = new MailPool(DistributeSystemFactory.Distribution.WEIGHT);
         IMailDelivery mailDelivery = new TeamReportDelivery();
 
         // End properties

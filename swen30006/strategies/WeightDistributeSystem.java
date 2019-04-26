@@ -10,25 +10,16 @@ import java.util.ListIterator;
 
 public class WeightDistributeSystem implements IdistributeSystem {
 
-    private LinkedList<WeightDistributeMailPool.Item> pool;
-    private LinkedList<Robot> robots;
-
     enum Weight{LIGHT, HEAVY, SUPER_HEAVY}
 
 
-    public WeightDistributeSystem(LinkedList<WeightDistributeMailPool.Item> pool, LinkedList<Robot> robots) {
-        this.pool=pool;
-        this.robots=robots;
-    }
-
-
     @Override
-    public void distribute() {
+    public void distribute(LinkedList<Robot> robots, LinkedList<MailPool.Item> pool) {
         ListIterator<Robot> i = robots.listIterator();
-        ListIterator<WeightDistributeMailPool.Item> j = pool.listIterator();
+        ListIterator<MailPool.Item> j = pool.listIterator();
         while (i.hasNext()){
             i.next();
-            WeightDistributeMailPool.Item item = null;
+//            WeightDistributeMailPool.Item item = null;
             if (j.hasNext()){
                 i.previous();
                 Weight weight = isHeavy(j);
@@ -64,7 +55,7 @@ public class WeightDistributeSystem implements IdistributeSystem {
         WeightDistributeHelper.Dispatch(robot);
     }
 
-    static Weight isHeavy(ListIterator<WeightDistributeMailPool.Item> j){
+    static Weight isHeavy(ListIterator<MailPool.Item> j){
         MailItem mailItem = j.next().mailItem;
         j.previous();// go back, so the next pointer can point to the true item
         if (mailItem.getWeight()<=Robot.INDIVIDUAL_MAX_WEIGHT){
@@ -79,7 +70,7 @@ public class WeightDistributeSystem implements IdistributeSystem {
 
 class WeightDistributeHelper {
 
-    public static void LoadLight(ListIterator<Robot> i, ListIterator<WeightDistributeMailPool.Item> j) throws ItemTooHeavyException {
+    public static void LoadLight(ListIterator<Robot> i, ListIterator<MailPool.Item> j) throws ItemTooHeavyException {
         // loading light item;
         Robot robot = i.next();
         assert (robot.isEmpty());

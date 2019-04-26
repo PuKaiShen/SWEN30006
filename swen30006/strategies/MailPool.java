@@ -2,14 +2,16 @@ package strategies;
 
 import java.util.LinkedList;
 import java.util.Comparator;
-import java.util.ListIterator;
 
+import Factories.DistributeSystemFactory;
 import automail.MailItem;
 import automail.PriorityMailItem;
 import automail.Robot;
 import exceptions.ItemTooHeavyException;
 
 public class MailPool implements IMailPool {
+
+
 
     protected class Item {
         int priority;
@@ -45,14 +47,18 @@ public class MailPool implements IMailPool {
     protected LinkedList<Robot> robots;
     protected IdistributeSystem distributeSystem;
 
-    public MailPool() {
+    public MailPool(DistributeSystemFactory.Distribution distribution) {
         // Start empty
-        pool = new LinkedList<Item>();
-        robots = new LinkedList<Robot>();
-        distributeSystem = new SimpleDistributeSystem(pool, robots);
+        pool = new LinkedList<>();
+        robots = new LinkedList<>();
+        if (distribution.equals(DistributeSystemFactory.Distribution.SIMPLE)){
+            distributeSystem = DistributeSystemFactory.getInstance().getSimpleDistributeSystem();
+        }else if (distribution.equals(DistributeSystemFactory.Distribution.WEIGHT)){
+            distributeSystem = DistributeSystemFactory.getInstance().getWeightDistributeSystem();
+        }
     }
 
-//    @Override
+    @Override
     public void addToPool(MailItem mailItem) {
         Item item = new Item(mailItem);
         pool.add(item);
@@ -61,11 +67,10 @@ public class MailPool implements IMailPool {
 
     @Override
     public void step() throws ItemTooHeavyException {
-
-        distributeSystem.distribute();
+        distributeSystem.distribute(robots, pool);
     }
 
-//    @Override
+    @Override
     public void registerWaiting(Robot robot) { // assumes won't be there already
         robots.add(robot);
     }
