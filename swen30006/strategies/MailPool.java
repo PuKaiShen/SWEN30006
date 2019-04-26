@@ -51,11 +51,7 @@ public class MailPool implements IMailPool {
         // Start empty
         pool = new LinkedList<>();
         robots = new LinkedList<>();
-        if (distribution.equals(DistributeSystemFactory.Distribution.SIMPLE)){
-            distributeSystem = DistributeSystemFactory.getInstance().getSimpleDistributeSystem();
-        }else if (distribution.equals(DistributeSystemFactory.Distribution.WEIGHT)){
-            distributeSystem = DistributeSystemFactory.getInstance().getWeightDistributeSystem();
-        }
+        distributeSystem = DistributeSystemFactory.getInstance().getDistributeSystem(distribution);
     }
 
     @Override

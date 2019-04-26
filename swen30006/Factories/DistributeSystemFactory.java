@@ -1,5 +1,6 @@
 package Factories;
 
+import strategies.IdistributeSystem;
 import strategies.SimpleDistributeSystem;
 import strategies.WeightDistributeSystem;
 
@@ -18,12 +19,23 @@ public class DistributeSystemFactory {
         return instance;
     }
 
-    public SimpleDistributeSystem getSimpleDistributeSystem (){
-        return new SimpleDistributeSystem();
+    public IdistributeSystem getDistributeSystem(Distribution distribution){
+
+        if (distribution.equals(Distribution.WEIGHT)){
+            return new WeightDistributeSystem();
+        }else if(distribution.equals(Distribution.SIMPLE)){
+            return new SimpleDistributeSystem();
+        }
+
+        return null;
     }
 
-    public WeightDistributeSystem getWeightDistributeSystem (){
-        return new WeightDistributeSystem();
-    }
+//    public SimpleDistributeSystem getSimpleDistributeSystem (){
+//        return new SimpleDistributeSystem();
+//    }
+//
+//    public WeightDistributeSystem getWeightDistributeSystem (){
+//        return new WeightDistributeSystem();
+//    }
 
 }
