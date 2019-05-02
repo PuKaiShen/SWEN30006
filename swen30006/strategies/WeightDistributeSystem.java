@@ -74,20 +74,22 @@ class WeightDistributeHelper {
         // loading light item;
         Robot robot = i.next();
         assert (robot.isEmpty());
-        WeightDistributeSystem.Weight weight = null;
+//        WeightDistributeSystem.Weight weight = null;
 
         robot.addToHand(j.next().mailItem);
         j.remove();
-        while (j.hasNext()){
-            weight = WeightDistributeSystem.isHeavy(j);
-            if (weight.equals(WeightDistributeSystem.Weight.LIGHT)){
-                robot.addToTube(j.next().mailItem);
-                j.remove();
-                break;
-            }else {
-                j.next();
-            }
-        }
+
+        addToTube(j, robot);
+//        while (j.hasNext()){
+//            weight = WeightDistributeSystem.isHeavy(j);
+//            if (weight.equals(WeightDistributeSystem.Weight.LIGHT)){
+//                robot.addToTube(j.next().mailItem);
+//                j.remove();
+//                break;
+//            }else {
+//                j.next();
+//            }
+//        }
         Dispatch(robot);
         i.remove();
     }
@@ -112,7 +114,7 @@ class WeightDistributeHelper {
         }
 
 
-        WeightDistributeSystem.Weight weight = null;
+//        WeightDistributeSystem.Weight weight = null;
 
         MailItem mailItem = j.next().mailItem;
         // team Robot
@@ -122,16 +124,17 @@ class WeightDistributeHelper {
         j.remove();
 
         for (Robot robot : robots){
-            while (j.hasNext()){
-                weight = WeightDistributeSystem.isHeavy(j);
-                if (weight.equals(WeightDistributeSystem.Weight.LIGHT)){
-                    robot.addToTube(j.next().mailItem);
-                    j.remove();
-                    break;
-                }else {
-                    j.next();
-                }
-            }
+            addToTube(j, robot);
+//            while (j.hasNext()){
+//                weight = WeightDistributeSystem.isHeavy(j);
+//                if (weight.equals(WeightDistributeSystem.Weight.LIGHT)){
+//                    robot.addToTube(j.next().mailItem);
+//                    j.remove();
+//                    break;
+//                }else {
+//                    j.next();
+//                }
+//            }
         }
 
         for (Robot robot : robots) {
@@ -139,6 +142,22 @@ class WeightDistributeHelper {
             i.remove();
             if (i.hasPrevious()){
                 i.previous();
+            }
+        }
+    }
+
+    private static void addToTube(ListIterator<MailPool.Item> j, Robot robot) throws ItemTooHeavyException {
+
+        WeightDistributeSystem.Weight weight = null;
+
+        while (j.hasNext()){
+            weight = WeightDistributeSystem.isHeavy(j);
+            if (weight.equals(WeightDistributeSystem.Weight.LIGHT)){
+                robot.addToTube(j.next().mailItem);
+                j.remove();
+                break;
+            }else {
+                j.next();
             }
         }
     }
